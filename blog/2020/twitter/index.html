@@ -129,98 +129,72 @@
     <!-- Content -->
     <div class="container mt-5">
       
-        <!-- _layouts/post.html -->
+        
+<!-- _layouts/post.html -->
+{%- assign year = page.date | date: "%Y" -%}
+{%- assign tags = page.tags | join: "" -%}
+{%- assign categories = page.categories | join: "" -%}
+
+{% if page._styles %}
+<!-- Page/Post style -->
+<style type="text/css">
+  {{ page._styles }}
+</style>
+{% endif %}
 
 <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">a post with twitter</h1>
-    <p class="post-meta">September 28, 2020</p>
+    <h1 class="post-title">{{ page.title }}</h1>
+    <p class="post-meta">{{ page.date | date: "%B %-d, %Y" }}{%- if page.author -%} • {{ page.author }}{%- endif -%}{%- if page.meta -%} • {{ page.meta }}{%- endif -%}</p>
     <p class="post-tags">
-      <a href="/al-folio/blog/2020"> <i class="fas fa-calendar fa-sm"></i> 2020 </a>
+      <a href="%7B%7B%20year%20%7C%20prepend:%20'/blog/'%20%7C%20prepend:%20site.baseurl%7D%7D"> <i class="fas fa-calendar fa-sm"></i> {{ year }} </a>
+      {%- if tags != "" %}
         ·  
-        <a href="/al-folio/blog/tag/formatting">
-          <i class="fas fa-hashtag fa-sm"></i> formatting</a>  
-          
+        {% for tag in page.tags -%}
+        <a href="%7B%7B%20tag%20%7C%20slugify%20%7C%20prepend:%20'/blog/tag/'%20%7C%20prepend:%20site.baseurl%7D%7D">
+          <i class="fas fa-hashtag fa-sm"></i> {{ tag }}</a>  
+          {% endfor -%}
+      {% endif %}
+
+      {%- if categories != "" %}
         ·  
-        <a href="/al-folio/blog/category/sample-posts">
-          <i class="fas fa-tag fa-sm"></i> sample-posts</a>  
-          <a href="/al-folio/blog/category/external-services">
-          <i class="fas fa-tag fa-sm"></i> external-services</a>  
-          
+        {% for category in page.categories -%}
+        <a href="%7B%7B%20category%20%7C%20slugify%20%7C%20prepend:%20'/blog/category/'%20%7C%20prepend:%20site.baseurl%7D%7D">
+          <i class="fas fa-tag fa-sm"></i> {{ category }}</a>  
+          {% endfor -%}
+      {% endif %}
 
     </p>
   </header>
 
   <article class="post-content">
-    
+    {% if page.toc and page.toc.beginning %}
+    <div id="table-of-contents">
+      {% toc %}
+    </div>
+    <hr>
+    {% endif %}
     <div id="markdown-content">
-      <p>A sample blog page that demonstrates the inclusion of Tweets/Timelines/etc.</p>
-
-<h1 id="tweet">Tweet</h1>
-<p>An example of displaying a tweet:</p>
-<div class="jekyll-twitter-plugin">
-<blockquote class="twitter-tweet">
-<p lang="sv" dir="ltr">jekyll-twitter-plugin (1.0.0): A Liquid tag plugin for Jekyll that renders Tweets from Twitter API <a href="http://t.co/m4EIQPM9h4" rel="external nofollow noopener" target="_blank">http://t.co/m4EIQPM9h4</a></p>— RubyGems (@rubygems) <a href="https://twitter.com/rubygems/status/518821243320287232?ref_src=twsrc%5Etfw" rel="external nofollow noopener" target="_blank">October 5, 2014</a>
-</blockquote>
-<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-</div>
-
-<h1 id="timeline">Timeline</h1>
-<p>An example of pulling from a timeline:</p>
-<div class="jekyll-twitter-plugin">
-<a class="twitter-timeline" data-width="500" data-tweet-limit="3" href="https://twitter.com/jekyllrb?ref_src=twsrc%5Etfw" rel="external nofollow noopener" target="_blank">Tweets by jekyllrb</a>
-<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-</div>
-
-<h1 id="additional-details">Additional Details</h1>
-<p>For more details on using the plugin visit: <a href="https://github.com/rob-murray/jekyll-twitter-plugin" rel="external nofollow noopener" target="_blank">jekyll-twitter-plugin</a></p>
-
+      {{ content }}
     </div>
   </article>
 
+  {%- if site.related_blog_posts.enabled -%}
+    {%- if page.related_posts == null or page.related_posts -%}
+      {% include related_posts.html %}
+    {%- endif %}
+  {%- endif %}
 
-  
-    
-    <br>
-    <hr>
-    <br>
-    <ul class="list-disc pl-8"></ul>
-
-    <!-- Adds related posts to the end of an article -->
-    <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2>
-    <p class="mb-2">Here are some more articles you might like to read next:</p>
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/al-folio/blog/2022/displaying-external-posts-on-your-al-folio-blog/">Displaying External Posts on Your al-folio Blog</a>
-  </li>
-
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/al-folio/blog/2023/sidebar-table-of-contents/">a post with table of contents on a sidebar</a>
-  </li>
-
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/al-folio/blog/2023/tables/">displaying beatiful tables with Bootstrap Tables</a>
-  </li>
-
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/al-folio/blog/2023/table-of-contents/">a post with table of contents</a>
-  </li>
-
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/al-folio/blog/2022/giscus-comments/">a post with giscus comments</a>
-  </li>
+  {%- if site.disqus_shortname and page.disqus_comments -%}
+    {% include disqus.html %}
+  {%- endif %}
+  {%- if site.giscus.repo and page.giscus_comments -%}
+    {% include giscus.html %}
+  {%- endif -%}
 
 </div>
+
 
       
     </div>

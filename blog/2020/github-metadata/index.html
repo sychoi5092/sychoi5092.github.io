@@ -129,110 +129,72 @@
     <!-- Content -->
     <div class="container mt-5">
       
-        <!-- _layouts/post.html -->
+        
+<!-- _layouts/post.html -->
+{%- assign year = page.date | date: "%Y" -%}
+{%- assign tags = page.tags | join: "" -%}
+{%- assign categories = page.categories | join: "" -%}
+
+{% if page._styles %}
+<!-- Page/Post style -->
+<style type="text/css">
+  {{ page._styles }}
+</style>
+{% endif %}
 
 <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">a post with github metadata</h1>
-    <p class="post-meta">September 28, 2020</p>
+    <h1 class="post-title">{{ page.title }}</h1>
+    <p class="post-meta">{{ page.date | date: "%B %-d, %Y" }}{%- if page.author -%} • {{ page.author }}{%- endif -%}{%- if page.meta -%} • {{ page.meta }}{%- endif -%}</p>
     <p class="post-tags">
-      <a href="/al-folio/blog/2020"> <i class="fas fa-calendar fa-sm"></i> 2020 </a>
+      <a href="%7B%7B%20year%20%7C%20prepend:%20'/blog/'%20%7C%20prepend:%20site.baseurl%7D%7D"> <i class="fas fa-calendar fa-sm"></i> {{ year }} </a>
+      {%- if tags != "" %}
         ·  
-        <a href="/al-folio/blog/category/sample-posts">
-          <i class="fas fa-tag fa-sm"></i> sample-posts</a>  
-          <a href="/al-folio/blog/category/external-services">
-          <i class="fas fa-tag fa-sm"></i> external-services</a>  
-          
+        {% for tag in page.tags -%}
+        <a href="%7B%7B%20tag%20%7C%20slugify%20%7C%20prepend:%20'/blog/tag/'%20%7C%20prepend:%20site.baseurl%7D%7D">
+          <i class="fas fa-hashtag fa-sm"></i> {{ tag }}</a>  
+          {% endfor -%}
+      {% endif %}
+
+      {%- if categories != "" %}
+        ·  
+        {% for category in page.categories -%}
+        <a href="%7B%7B%20category%20%7C%20slugify%20%7C%20prepend:%20'/blog/category/'%20%7C%20prepend:%20site.baseurl%7D%7D">
+          <i class="fas fa-tag fa-sm"></i> {{ category }}</a>  
+          {% endfor -%}
+      {% endif %}
 
     </p>
   </header>
 
   <article class="post-content">
-    
+    {% if page.toc and page.toc.beginning %}
+    <div id="table-of-contents">
+      {% toc %}
+    </div>
+    <hr>
+    {% endif %}
     <div id="markdown-content">
-      <p>A sample blog page that demonstrates the accessing of github meta data.</p>
-
-<h2 id="what-does-github-metadata-do">What does Github-MetaData do?</h2>
-<ul>
-  <li>Propagates the site.github namespace with repository metadata</li>
-  <li>Setting site variables :
-    <ul>
-      <li>site.title</li>
-      <li>site.description</li>
-      <li>site.url</li>
-      <li>site.baseurl</li>
-    </ul>
-  </li>
-  <li>Accessing the metadata - duh.</li>
-  <li>Generating edittable links.</li>
-</ul>
-
-<h2 id="additional-reading">Additional Reading</h2>
-<ul>
-  <li>If you’re recieving incorrect/missing data, you may need to perform a Github API<a href="https://github.com/jekyll/github-metadata/blob/master/docs/authentication.md" rel="external nofollow noopener" target="_blank"> authentication</a>.</li>
-  <li>Go through this <a href="https://jekyll.github.io/github-metadata/" rel="external nofollow noopener" target="_blank">README</a> for more details on the topic.</li>
-  <li>
-<a href="https://github.com/jekyll/github-metadata/blob/master/docs/site.github.md" rel="external nofollow noopener" target="_blank">This page</a> highlights all the feilds you can access with github-metadata.
-<br>
-</li>
-</ul>
-
-<h2 id="example-metadata">Example MetaData</h2>
-<ul>
-  <li>Host Name :</li>
-  <li>URL :</li>
-  <li>BaseURL :</li>
-  <li>Archived :</li>
-  <li>Contributors :</li>
-</ul>
-
-
+      {{ content }}
     </div>
   </article>
 
+  {%- if site.related_blog_posts.enabled -%}
+    {%- if page.related_posts == null or page.related_posts -%}
+      {% include related_posts.html %}
+    {%- endif %}
+  {%- endif %}
 
-  
-    
-    <br>
-    <hr>
-    <br>
-    <ul class="list-disc pl-8"></ul>
-
-    <!-- Adds related posts to the end of an article -->
-    <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2>
-    <p class="mb-2">Here are some more articles you might like to read next:</p>
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/al-folio/blog/2022/displaying-external-posts-on-your-al-folio-blog/">Displaying External Posts on Your al-folio Blog</a>
-  </li>
-
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/al-folio/blog/2023/sidebar-table-of-contents/">a post with table of contents on a sidebar</a>
-  </li>
-
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/al-folio/blog/2023/tables/">displaying beatiful tables with Bootstrap Tables</a>
-  </li>
-
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/al-folio/blog/2023/table-of-contents/">a post with table of contents</a>
-  </li>
-
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/al-folio/blog/2022/giscus-comments/">a post with giscus comments</a>
-  </li>
+  {%- if site.disqus_shortname and page.disqus_comments -%}
+    {% include disqus.html %}
+  {%- endif %}
+  {%- if site.giscus.repo and page.giscus_comments -%}
+    {% include giscus.html %}
+  {%- endif -%}
 
 </div>
+
 
       
     </div>
