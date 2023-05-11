@@ -1,6 +1,7 @@
 ---
 layout: default
 ---
+{% raw %}
 <!-- _layouts/post.html -->
 {%- assign year = page.date | date: "%Y" -%}
 {%- assign tags = page.tags | join: "" -%}
@@ -65,3 +66,4 @@ layout: default
   {%- endif -%}
 
 </div>
+{% endraw %}
